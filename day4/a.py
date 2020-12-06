@@ -1,4 +1,11 @@
-all_dicts = []
+passports = []
+
+class Passport:
+    def __init__(self, entries_):
+        self.entries = entries_
+
+    def has(self, need_set):
+        return len(set(self.entries.keys()).intersection(need_set)) == len(need_set)
 
 with open('in.txt') as f:
     tmp_dict = {}
@@ -8,20 +15,18 @@ with open('in.txt') as f:
             a, b = e.split(':')
             tmp_dict[a]=b
         if not line.strip(): # this catches new lines and means that the current passport is done getting new entries, so add it to total list
-            all_dicts.append(dict(tmp_dict))
+            passports.append(Passport(dict(tmp_dict)))
             tmp_dict = {}
     if tmp_dict:
-        all_dicts.append(dict(tmp_dict))
+        passports.append(Passport(dict(tmp_dict)))
 
 need = {'byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid'}
 
-def solve(dicts):
+def solve(passports):
     cnt = 0
-    for di in dicts:
-        if len(set(di.keys()).intersection(need)) == 7: # check that all properties from need are present
+    for passport in passports:
+        if passport.has(need):
             cnt += 1
     return cnt
 
-print(solve(all_dicts))
-
-print('\n'.split())
+print(solve(passports))

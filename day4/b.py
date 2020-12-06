@@ -1,4 +1,44 @@
-all_dicts = []
+passports = []
+
+class Passport:
+    def __init__(self, entries_):
+        self.entries = entries_
+
+    def has(self, need_set):
+        return len(set(self.entries.keys()).intersection(need_set)) == len(need_set)
+
+    def validate_byr(self):
+        return len(self.entries['byr']) == 4 and 1920 <= int(self.entries['byr']) <= 2002
+
+    def validate_iyr(self):
+        return len(self.entries['iyr']) == 4 and 2010 <= int(self.entries['iyr']) <= 2020
+
+    def validate_eyr(self):
+        return len(self.entries['eyr']) == 4 and 2020 <= int(self.entries['eyr']) <= 2030
+
+    def validate_hgt(self):
+        hgt_type = self.entries['hgt'][-2:]
+        hgt_b = False
+        if hgt_type == 'cm':
+            hgt_b = 150 <= int(self.entries['hgt'][:-2]) <= 193
+        elif hgt_type == 'in':
+            hgt_b = 59 <= int(self.entries['hgt'][:-2]) <= 76
+        return hgt_b
+
+    def validate_hcl(self):
+        return self.entries['hcl'][0] == '#' and all(c in '0123456789abcdef' for c in self.entries['hcl'][1:])
+
+    def validate_ecl(self):
+        return self.entries['ecl'] in ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth']
+
+    def validate_pid(self):
+        return self.entries['pid'].isdigit() and len(self.entries['pid'])==9
+
+    def validate_cid(self):
+        return True
+
+    def validate(self):
+        return self.validate_byr() and self.validate_iyr() and self.validate_eyr() and self.validate_hgt() and self.validate_hcl() and self.validate_ecl() and self.validate_pid() and self.validate_cid()
 
 with open('in.txt') as f:
     tmp_dict = {}
@@ -8,33 +48,19 @@ with open('in.txt') as f:
             a, b = e.split(':')
             tmp_dict[a]=b
         if not line.strip(): # this catches new lines and means that the current passport is done getting new entries, so add it to total list
-            all_dicts.append(dict(tmp_dict))
+            passports.append(Passport(dict(tmp_dict)))
             tmp_dict = {}
     if tmp_dict:
-        all_dicts.append(dict(tmp_dict))
+        passports.append(Passport(dict(tmp_dict)))
 
 need = {'byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid'}
 
-def solve(dicts):
+def solve(passports):
     cnt = 0
-    for di in dicts:
-        if len(set(di.keys()).intersection(need)) == 7: # check that all properties from need are present
-
-            # annoying string validation
-            byr_b = len(di['byr']) == 4 and 1920 <= int(di['byr']) <= 2002
-            iyr_b = len(di['iyr']) == 4 and 2010 <= int(di['iyr']) <= 2020
-            eyr_b = len(di['eyr']) == 4 and 2020 <= int(di['eyr']) <= 2030
-            hgt_type = di['hgt'][-2:]
-            hgt_b = False
-            if hgt_type == 'cm':
-                hgt_b = 150 <= int(di['hgt'][:-2]) <= 193
-            elif hgt_type == 'in':
-                hgt_b = 59 <= int(di['hgt'][:-2]) <= 76
-            hcl_b = di['hcl'][0] == '#' and di['hcl'][1:].isalnum() # this should really reject every alphabetic char after f
-            ecl_b = di['ecl'] in ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth']
-            pid_b = di['pid'].isnumeric() and len(di['pid'])==9
-            if byr_b and iyr_b and eyr_b and hgt_b and hcl_b and ecl_b and pid_b:
+    for passport in passports:
+        if passport.has(need):
+            if passport.validate():
                 cnt += 1
     return cnt
 
-print(solve(all_dicts))
+print(solve(passports))
