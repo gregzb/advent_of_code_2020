@@ -53,9 +53,9 @@ Using Python3
 
 :white_check_mark: Day 18
 
-:clock9: Day 19
+:white_check_mark: Day 19
 
-:clock9: Day 20
+:white_check_mark: Day 20
 
 :clock9: Day 21
 
