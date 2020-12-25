@@ -1,6 +1,6 @@
 # Advent of Code 2020
 
-My goal this year is to complete all 25 challenges, even if not immediately
+Finished all 25 days using Python3.8 :)
 
 Using Python3
 
@@ -61,8 +61,8 @@ Using Python3
 
 :white_check_mark: Day 22
 
-:clock9: Day 23
+:white_check_mark: Day 23
 
-:clock9: Day 24
+:white_check_mark: Day 24
 
-:clock9: Day 25
+:white_check_mark: Day 25
