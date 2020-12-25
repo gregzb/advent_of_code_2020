@@ -35,7 +35,10 @@ def get_winner(p0, p1):
 def hash_(p0, p1):
     return tuple(p0), tuple(p1)
 
+max_v = 0
+
 def play_game(p0, p1):
+    global max_v
     seen = set()
     seen.add(hash_(p0, p1))
 
@@ -60,6 +63,8 @@ def play_game(p0, p1):
 
     res = score if is_winner else -score
 
+    max_v = max(max_v, len(seen))
+
     return res
 
 def solve(p0, p1):
@@ -67,3 +72,4 @@ def solve(p0, p1):
 
 solved = solve(deque(players[0]), deque(players[1]))
 print(solved)
+# print(max_v)
